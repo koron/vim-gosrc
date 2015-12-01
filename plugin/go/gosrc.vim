@@ -23,6 +23,9 @@ endfunction
 
 function! s:findSrc(name)
   let dirs = s:getDirs()
+  if len(dirs) == 0
+    return ''
+  endif
   let files = globpath(join(dirs, ','), 'src/' . a:name, 0, 1)
   if len(files) == 0
     return ''
@@ -59,7 +62,10 @@ function! s:getDirs()
       echohl WarningMsg
       echomsg '"go env GOROOT" failed'
       echohl None
+      return dirs
     endif
+  else
+    return dirs
   endif
   if len(goroot) != 0 && isdirectory(goroot)
     let dirs += [goroot]
