@@ -4,7 +4,7 @@
 "   :Gosrc {file_name}
 "       Open (:split) golang source file which is at $GOROOT or $GOPATH.
 "
-" Version: 1.0
+" Version: 1.0.1
 " Author:  MURAOKA Taro <koron.kaoriya@gmail.com>
 " License: VIM LICENSE
 
@@ -62,22 +62,21 @@ function! s:getDirs()
       echohl WarningMsg
       echomsg '"go env GOROOT" failed'
       echohl None
-      return dirs
     endif
-  else
-    return dirs
   endif
   if len(goroot) != 0 && isdirectory(goroot)
     let dirs += [goroot]
   endif
   " GOPATH
-  let sep = ':'
-  if has('win32') || has('win64')
-    let sep = ';'
-  endif
-  let workspaces = split($GOPATH, sep)
-  if len(workspaces) > 0
-    let dirs += workspaces
+  if exists('$GOPATH')
+    let sep = ':'
+    if has('win32') || has('win64')
+      let sep = ';'
+    endif
+    let workspaces = split($GOPATH, sep)
+    if len(workspaces) > 0
+      let dirs += workspaces
+    endif
   endif
   return dirs
 endfunction
