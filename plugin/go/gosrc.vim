@@ -4,7 +4,7 @@
 "   :Gosrc {file_name}
 "       Open (:split) golang source file which is at $GOROOT or $GOPATH.
 "
-" Version: 1.0
+" Version: 1.0.1
 " Author:  MURAOKA Taro <koron.kaoriya@gmail.com>
 " License: VIM LICENSE
 
@@ -23,6 +23,9 @@ endfunction
 
 function! s:findSrc(name)
   let dirs = s:getDirs()
+  if len(dirs) == 0
+    return ''
+  endif
   let files = globpath(join(dirs, ','), 'src/' . a:name, 0, 1)
   if len(files) == 0
     return ''
@@ -65,13 +68,15 @@ function! s:getDirs()
     let dirs += [goroot]
   endif
   " GOPATH
-  let sep = ':'
-  if has('win32') || has('win64')
-    let sep = ';'
-  endif
-  let workspaces = split($GOPATH, sep)
-  if len(workspaces) > 0
-    let dirs += workspaces
+  if exists('$GOPATH')
+    let sep = ':'
+    if has('win32') || has('win64')
+      let sep = ';'
+    endif
+    let workspaces = split($GOPATH, sep)
+    if len(workspaces) > 0
+      let dirs += workspaces
+    endif
   endif
   return dirs
 endfunction
